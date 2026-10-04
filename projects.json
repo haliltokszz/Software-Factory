@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "factory": {
+    "localPath": "C:/Users/tokso/source/repos/AI-Software-Factory",
+    "repository": "haliltokszz/Software-Factory",
+    "remoteName": "origin",
+    "defaultBranch": "main",
+    "codexProjectId": null,
+    "projectUrl": null
+  },
+  "products": [
+    {
+      "id": "chronoplan",
+      "name": "ChronoPlan",
+      "entry": "existing",
+      "repositories": [
+        {
+          "id": "chronoplan-flutter",
+          "localPath": "C:/Users/tokso/source/HabitAI/life_coach_ai",
+          "repository": "ScannyBear/Habit-AI",
+          "remoteName": "main",
+          "defaultBranch": null,
+          "stack": "flutter",
+          "verificationCommands": [],
+          "releaseTrigger": "unknown",
+          "access": "unverified"
+        },
+        {
+          "id": "chronoplan-backend",
+          "localPath": "C:/Users/tokso/source/repos/HabitAI",
+          "repository": "Pixalco/HabitAI-Backend",
+          "remoteName": "origin",
+          "defaultBranch": null,
+          "stack": "dotnet-8",
+          "verificationCommands": [],
+          "releaseTrigger": "main-push-deploy",
+          "access": "unverified"
+        },
+        {
+          "id": "chronoplan-landing",
+          "localPath": "C:/Users/tokso/source/repos/HabitAI-LandingPage",
+          "repository": "Pixalco/HabitAI-LandingPage",
+          "remoteName": "origin",
+          "defaultBranch": null,
+          "stack": "nextjs-15",
+          "verificationCommands": [],
+          "releaseTrigger": "unknown",
+          "access": "unverified"
+        }
+      ]
+    },
+    {
+      "id": "whisperroom",
+      "name": "WhisperRoom",
+      "entry": "existing",
+      "repositories": [
+        {
+          "id": "whisperroom-backend",
+          "localPath": "C:/Users/tokso/source/repos/WhisperRoom",
+          "repository": "Pixalco/WhisperRoom-Backend",
+          "remoteName": "origin",
+          "defaultBranch": null,
+          "stack": "dotnet-10",
+          "verificationCommands": [],
+          "releaseTrigger": "unknown",
+          "access": "unverified"
+        },
+        {
+          "id": "whisperroom-flutter",
+          "localPath": "C:/Users/tokso/source/repos/whisper_room",
+          "repository": "mervetoksoz/whisper_room",
+          "remoteName": "origin",
+          "defaultBranch": null,
+          "stack": "flutter",
+          "verificationCommands": [],
+          "releaseTrigger": "unknown",
+          "access": "unverified"
+        }
+      ]
+    },
+    {
+      "id": "eventory",
+      "name": "Eventory",
+      "entry": "idea",
+      "briefRef": null,
+      "repositories": []
+    }
+  ]
+}
+
