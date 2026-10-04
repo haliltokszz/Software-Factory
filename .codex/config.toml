@@ -1,0 +1,79 @@
+# Project-scoped configuration. All capabilities remain unverified until native probes.
+default_permissions = "factory-coordinator"
+approval_policy = "never"
+web_search = "disabled"
+
+[agents]
+max_concurrent_threads_per_session = 1
+
+[apps._default]
+enabled = false
+destructive_enabled = false
+open_world_enabled = false
+# GitHub app id/tool keys require native discovery; no guessed allowlist.
+
+[computer_use]
+default_app_access = "deny"
+
+[mcp_servers.node_repl]
+enabled = false
+
+[mcp_servers.cua_repl]
+enabled = false
+
+[mcp_servers.stitch]
+enabled = false
+
+[mcp_servers.codebase-memory-mcp]
+enabled_tools = ["search_graph", "trace_path", "get_code_snippet", "query_graph", "get_architecture", "list_projects", "index_repository"]
+# This local MCP reads outside the command sandbox. It is not filesystem enforcement.
+
+[permissions.factory-coordinator]
+description = "Read-only coordinator; no worker activation."
+extends = ":read-only"
+
+[permissions.factory-coordinator.filesystem]
+":root" = "deny"
+":minimal" = "read"
+"C:/Users/tokso/source/HabitAI/life_coach_ai" = "read"
+"C:/Users/tokso/source/repos/HabitAI" = "read"
+"C:/Users/tokso/source/repos/HabitAI-LandingPage" = "read"
+"C:/Users/tokso/source/repos/WhisperRoom" = "read"
+"C:/Users/tokso/source/repos/whisper_room" = "read"
+
+[permissions.factory-coordinator.filesystem.":workspace_roots"]
+"." = "read"
+"verification/runs" = "write"
+"**/*.env" = "deny"
+"**/.env.*" = "deny"
+"work/permission-fixture/secrets" = "deny"
+
+[permissions.factory-coordinator.network]
+enabled = false
+
+[permissions.factory-reviewer]
+description = "Independent reviewer; evidence read-only too."
+extends = "factory-coordinator"
+
+[permissions.factory-reviewer.filesystem.":workspace_roots"]
+"verification/runs" = "read"
+
+[permissions.factory-worker-fixture]
+description = "Disposable fixture only, one approved application file."
+extends = ":workspace"
+
+[permissions.factory-worker-fixture.filesystem]
+":root" = "deny"
+":minimal" = "read"
+":tmpdir" = "read"
+
+[permissions.factory-worker-fixture.filesystem.":workspace_roots"]
+"." = "read"
+"work/permission-fixture/app/allowed.txt" = "write"
+"verification/runs/native-controls" = "write"
+"work/permission-fixture/secrets" = "deny"
+"**/*.env" = "deny"
+"**/.env.*" = "deny"
+
+[permissions.factory-worker-fixture.network]
+enabled = false
