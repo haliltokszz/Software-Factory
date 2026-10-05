@@ -6,6 +6,16 @@ Final independent whole-branch review found duplicate release-candidate matching
 
 **Status: bootstrap core implemented; unattended development BLOCKED.** Pure tests and process rehearsals do not prove native security, ownership, scheduler or production behavior.
 
+## Approved Windows sandbox setup — 2026-10-05
+
+Human explicitly approved first-party elevated Windows sandbox setup in this chat. Installed Codex CLI 0.160.0 supplied the local protocol schemas. A one-time stdio client called `windowsSandbox/setupStart` with `mode: elevated` and this bootstrap cwd, without starting any agent/thread or inventing ACL/firewall rules. Native `windowsSandbox/setupCompleted` returned `success: true, error: null`; subsequent `windowsSandbox/readiness` returned `ready`. First-party setup changed the global config, whose Windows sandbox mode was independently read back as `elevated`. Installation client was cleaned up after completion; no desktop app restart or Defender/security setting change was performed.
+
+Factory runtime acceptance still fails. Project-only profile resolution reproduces `default_permissions requires a [permissions] table`. Supplying the narrow permission table invocation-only now reaches the elevated backend and is rejected with `elevated Windows sandbox requires effective :root read access`. A separate fixed-command dummy fixture diagnostic used the Windows-required root-read baseline, one writable dummy file and a denied dummy secret folder; no model/worker ran and this broader-read baseline was not adopted in Factory config. It failed before the first child command with `CreateProcessWithLogonW failed: 267`. Backslash cwd and an absolute RTK executable path each reproduced that failure. The cwd exists and is a normal directory, not a junction; this rules out those simple path hypotheses but does not establish the Windows startup root cause.
+
+Working reference: the standard native `:workspace` profile in a separate disposable directory under `verification/runs/native-controls/install-smoke` did start the real RTK/Node command. It returned exit 0 and created `sentinel.txt` with the exact expected bytes. The command was fixed, network disabled and no agent started. **Installation execution smoke PASS.** This proves basic elevated command execution; it does not prove the narrower Factory policies, protected-file denials or secret denial. Difference from the failing diagnostic includes cwd, writable-directory scope and deny-read rules; no single one is claimed as the root cause.
+
+Fresh first-party `codex doctor --summary` reports the installation consistent, config loaded and desktop app-server initialization successful; its generic filesystem/network checks do not test the Factory profiles or explain the startup error. **Native Factory boundary-enforcement passes remain zero.** Raw ignored evidence: `verification/runs/native-controls/sandbox-setup-result.json`, `post-setup-diagnostic.json`, `windows-fixture-result.json`, `install-smoke-result.json` and installed protocol schemas. No sandbox credential files or product secret files were opened. Profile/runtime compatibility requires further investigation; broadening Factory read access or adding an execution environment is a separate design decision.
+
 ## Verified locally
 
 Registry has ChronoPlan (3 repos), WhisperRoom (2 repos) and idea-only Eventory. Factory remote is haliltokszz/Software-Factory; Codex project Software Factory id 16f837db-9ef7-410a-a052-6e9673691b99 was returned by list_projects.
@@ -19,7 +29,10 @@ Fresh separate process rehearsal returned correct CTO 1 idea packet, CTO 2 exist
 | Surface | Observation | Result |
 |---|---|---|
 | Project permission load | `codex sandbox -C ... -P factory-worker-fixture` → `default_permissions requires a [permissions] table`, also with invocation-only project trust | BLOCKED; project config not resolved by that invocation |
-| Explicit narrow profile | Same permission table provided invocation-only via -c → `windows sandbox failed: Restricted read-only access requires the elevated Windows sandbox backend` | BLOCKED; no global config change or sandbox setup performed |
+| Elevated Windows setup | First-party setup completed successfully; readiness ready; global mode read back elevated | Setup PASS; separate runtime/enforcement acceptance still blocked |
+| Standard native workspace smoke | Real RTK/Node command in a disposable directory returned exit 0 and created exact sentinel bytes | Installation execution PASS; does not prove Factory boundaries |
+| Explicit narrow profile | After setup, same table invocation-only via -c → `elevated Windows sandbox requires effective :root read access` | BLOCKED; current narrow-read profile unsupported by this invocation |
+| Windows-compatible dummy diagnostic | Root-read baseline used only for fixed dummy-file commands → `CreateProcessWithLogonW failed: 267`, also with backslash cwd and absolute RTK path | BLOCKED; command never started; profile not adopted for Factory |
 | Probe suite execution | allowed-write failed at native startup; zero enforcement passes; remaining probes unobserved | Unsupported, never counted as denial/pass |
 | Custom role/skill discovery | Files authored and read explicitly by rehearsal agent | Native discovery PENDING |
 | GitHub read metadata/search | get_repo reports admin/maintain/push/pull/triage; initial managed-Issue search returned empty | Read works; this is not complete queue/WIP or write proof |
@@ -51,4 +64,4 @@ Raw local probe evidence stays ignored under verification/runs/native-controls; 
 
 ## Activation prerequisite
 
-Resolve supported native profile loading and elevated Windows sandbox through the first-party client; prove bounded worker/reviewer and separate tool/remote/ownership controls before activation. Restore authorized GitHub Issue/PR integration access and browser/Projects surface. Then create the correctly restricted Factory coordinator, bind actual native human provenance to full pilot Issue/version/scope, run manual acceptance, create PAUSED heartbeat and observe read-only scheduled wakeup. Never replace these prerequisites with prompt instructions or broader parent permissions.
+Elevated first-party setup is complete. Resolve the Windows command-start error and supported native profile loading/compatibility; prove bounded worker/reviewer and separate tool/remote/ownership controls before activation. Any broader Factory read policy or additional execution environment needs its own explicit design decision. Restore authorized GitHub Issue/PR integration access and browser/Projects surface. Then create the correctly restricted Factory coordinator, bind actual native human provenance to full pilot Issue/version/scope, run manual acceptance, create PAUSED heartbeat and observe read-only scheduled wakeup. Never replace these prerequisites with prompt instructions or broader parent permissions.
