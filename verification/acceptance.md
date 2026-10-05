@@ -1,5 +1,7 @@
 # Factory acceptance — 2026-10-04
 
+Continuation on 2026-10-05: full core suite 19/19 PASS; local disposable pilot behavior RED (2 failures) → GREEN (3/3 PASS), commit 0d4e54a based on bootstrap 679ef79. Exact diff: verification/pilot/product.mjs and product.test.mjs only. This is manual local test evidence; no native worker, real Issue-bound approval or live pilot PR.
+
 **Status: bootstrap core implemented; unattended development BLOCKED.** Pure tests and process rehearsals do not prove native security, ownership, scheduler or production behavior.
 
 ## Verified locally
