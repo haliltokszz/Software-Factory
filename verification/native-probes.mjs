@@ -2,6 +2,7 @@ import {spawnSync} from 'node:child_process';
 import {mkdirSync,writeFileSync,readFileSync,existsSync,realpathSync} from 'node:fs';
 import {join,resolve,dirname,relative,isAbsolute} from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {randomUUID} from 'node:crypto';
 
 const canonical = value => {const path=realpathSync(value);return process.platform==='win32'?path.toLowerCase():path;};
 const within = (base,path) => {const rel=relative(base,path);return rel==='' || (!isAbsolute(rel) && rel!=='..' && !rel.startsWith('..'+(process.platform==='win32'?'\\':'/')));};
@@ -58,7 +59,8 @@ export async function runNativeProbes(input) {
     const before=existsSync(target)?readFileSync(target):null;
     const args=['proxy','codex','sandbox','-C',factory];
     if(input.configProfile) args.push('-p',input.configProfile);
-    args.push('-P',input.permissionProfile,'rtk','proxy','node',join(factory,'verification','native-probes.mjs'),'--probe',probe.id,'--factory',factory,'--fixture',fixture);
+    const payload='native probe '+randomUUID()+'\n';
+    args.push('-P',input.permissionProfile,'rtk','proxy','node',join(factory,'verification','native-probes.mjs'),'--probe',probe.id,'--factory',factory,'--fixture',fixture,'--payload',payload);
     const run=spawnSync('rtk',args,{cwd:factory,shell:false,encoding:'utf8',timeout:60000,windowsHide:true});
     const output=(run.stdout??'')+(run.stderr??'')+(run.error?'\n'+run.error.message:'');
     const path=join(outputDirectory,probe.id+'.json');
@@ -74,7 +76,7 @@ export async function runNativeProbes(input) {
       for(const remaining of probes.slice(probes.indexOf(probe)+1)) results.unsupported.push(remaining.id+': not observed after native startup failure');
       break;
     }
-    const pass=probe.allow ? observed.result==='allowed' && run.status===0 && !unchanged : observed.result==='denied' && run.status===3 && unchanged;
+    const pass=probe.allow ? observed.result==='allowed' && run.status===0 && after?.equals(Buffer.from(payload)) : observed.result==='denied' && run.status===3 && unchanged;
     (pass?results.passed:results.failed).push(probe.id);
   }
   // A command sandbox cannot prove the native agent's tool surface, ownership or job handoff.
@@ -89,9 +91,11 @@ function child(args) {
   const factoryRoot=args[args.indexOf('--factory')+1],fixtureRoot=args[args.indexOf('--fixture')+1];
   const {fixture}=validateFixture({factoryRoot,fixtureRoot,permissionProfile:'child'});
   if(!probe) throw new Error('unknown probe');
+  const payload=args[args.indexOf('--payload')+1];
+  if(!probe.read && (!args.includes('--payload') || typeof payload!=='string' || payload.length===0)) throw new Error('write probe payload missing');
   const target=join(fixture,probe.file);
   try {
-    if(probe.read) readFileSync(target);else writeFileSync(target,'native probe write\n');
+    if(probe.read) readFileSync(target);else writeFileSync(target,payload);
     console.log(JSON.stringify({id,result:'allowed'}));process.exitCode=0;
   } catch(error) {
     const denied=['EACCES','EPERM'].includes(error.code);

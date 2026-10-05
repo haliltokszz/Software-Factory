@@ -1,6 +1,7 @@
 # CTO 3 — Release candidate
 
-Issue / package version / scope hash / exact environment:
+Issue / package version / exact environment:
+Use the frozen scope hash and human-message reference from the separate Issue approval record; do not write computed hashes or later decisions into their own frozen source bytes.
 Candidate set: every repoId, immutable SHA, artifactId (null means no verified artifact).
 Local checks: real argv/cwd, exit, before/after SHA, clean status, timestamps, output path and SHA256 verified from disk.
 CI: provider run/check URL, candidate SHA, real conclusion; absence is explicit. Manual: steps/results/artifact reference.

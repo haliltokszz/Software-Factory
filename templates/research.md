@@ -1,6 +1,7 @@
 # CTO 1 — Investment decision
 
-Issue / product / package version / scope hash / human-message reference:
+Issue / product / package version:
+Freeze this decision scope before approval; compute raw UTF-8 SHA256 and store digest/human-message reference separately in the Issue record, never in this frozen file.
 
 Every claim: FACT | INFERENCE | ASSUMPTION | UNKNOWN; dated source URL and method, limitations and contrary evidence.
 

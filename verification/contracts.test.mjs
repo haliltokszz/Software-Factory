@@ -17,6 +17,25 @@ test('persists repair and infrastructure bounds',()=>{const w=work();w.checkpoin
 test('accepts clean current successful evidence',()=>assert.equal(validateEvidence(evidence(),expected).ok,true));
 test('rejects stale dirty missing or failed check evidence',()=>{for(const change of [{beforeSha:other},{afterSha:other},{exitCode:1},{exitCode:null},{timedOut:true},{cleanBefore:false},{cleanAfter:false},{outputPath:''}])assert.equal(validateEvidence({...evidence(),...change},expected).ok,false);assert.equal(validateEvidence(evidence(),{...expected,outputHashMatches:false}).ok,false);});
 test('invalidates release approval when candidate changes',()=>{const w=work();w.candidates=[{repoId:'app',sha:other,artifactId:null}];w.approvals.push({...w.approvals[0],gate:3,candidates:[{repoId:'app',sha,artifactId:null}],environment:'production'});assert.equal(validateWorkRecord(w,registry).ok,false);});
+test('requires one unique approval for every release repository',()=>{
+  const r=structuredClone(registry);
+  r.products[0].repositories.push({...structuredClone(r.products[0].repositories[0]),id:'backend',repository:'owner/backend'});
+  const w=work();w.repoIds.push('backend');w.allowedPaths.backend=['src/'];
+  w.candidates=[{repoId:'app',sha,artifactId:null},{repoId:'backend',sha:other,artifactId:'build-2'}];
+  const approval={...w.approvals[0],gate:3,candidates:structuredClone(w.candidates),environment:'production'};
+  w.approvals.push(approval);
+  assert.equal(validateWorkRecord(w,r).ok,true);
+  for(const candidates of [
+    [w.candidates[0],w.candidates[0]],
+    [w.candidates[0]],
+    [w.candidates[0],{...w.candidates[1],sha}],
+    [w.candidates[0],{...w.candidates[1],artifactId:null}]
+  ]) {
+    approval.candidates=candidates;
+    assert.equal(validateWorkRecord(w,r).ok,false);
+  }
+  approval.candidates=structuredClone(w.candidates).reverse();
+  assert.equal(validateWorkRecord(w,r).ok,true);
+});
 test('rejects paths escaping approval scope',()=>{for(const path of ['../policy','C:/outside','/outside','src/../../policy']){const w=work();w.allowedPaths.app=[path];assert.equal(validateWorkRecord(w,registry).ok,false);}});
 test('rejects malformed registries and missing required verification',()=>{assert.equal(validateRegistry(null).ok,false);const c=structuredClone(registry);c.products[0].repositories.push(c.products[0].repositories[0]);assert.equal(validateRegistry(c).ok,false);const w=work();w.checks=[];assert.equal(validateReadiness(w,context(w)).ok,false);});
-

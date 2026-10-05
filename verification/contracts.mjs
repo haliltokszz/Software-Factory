@@ -15,7 +15,10 @@ const unique = x => new Set(x).size === x.length;
 const relativePath = x => text(x) && !/^(?:[a-z]:|[\\/])|\0/i.test(x) && !x.split(/[\\/]/).includes('..') && !x.includes(':');
 const argv = x => strings(x) && x[0] === 'proxy' && x.length > 1;
 const result = errors => ({ok:errors.length === 0,errors});
-const candidatesEqual = (a,b) => Array.isArray(a) && Array.isArray(b) && a.length === b.length && a.every(x => b.some(y => object(x) && object(y) && x.repoId===y.repoId && x.sha===y.sha && x.artifactId===y.artifactId));
+const candidatesEqual = (a,b) => Array.isArray(a) && Array.isArray(b)
+  && a.length === b.length && a.every(object) && b.every(object)
+  && unique(a.map(x=>x.repoId)) && unique(b.map(x=>x.repoId))
+  && a.every(x => b.some(y => x.repoId===y.repoId && x.sha===y.sha && x.artifactId===y.artifactId));
 
 /** Onboarding is valid with null branch/project ids; it grants no Ready authority. */
 export function validateRegistry(registry) {
