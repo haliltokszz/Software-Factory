@@ -30,17 +30,64 @@ description = "Read-only coordinator; no worker activation."
 extends = ":read-only"
 
 [permissions.factory-coordinator.filesystem]
-":root" = "deny"
+# User-approved Windows A: other local files remain readable unless explicitly denied.
+":root" = "read"
 ":minimal" = "read"
-"C:/Users/tokso/source/HabitAI/life_coach_ai" = "read"
-"C:/Users/tokso/source/repos/HabitAI" = "read"
-"C:/Users/tokso/source/repos/HabitAI-LandingPage" = "read"
-"C:/Users/tokso/source/repos/WhisperRoom" = "read"
-"C:/Users/tokso/source/repos/whisper_room" = "read"
+# Native startup snapshots matching files; deeper/new files require a new scope check.
+glob_scan_max_depth = 6
+"C:/Users/tokso/.codex" = "deny"
+"C:/Users/tokso/.ssh" = "deny"
+"C:/Users/tokso/.aws" = "deny"
+"C:/Users/tokso/.azure" = "deny"
+"C:/Users/tokso/.kube" = "deny"
+"C:/Users/tokso/.config/gcloud" = "deny"
+"C:/Users/tokso/.git-credentials" = "deny"
+"C:/Users/tokso/.netrc" = "deny"
+"C:/Users/tokso/_netrc" = "deny"
+"C:/Users/tokso/AppData/Roaming/Microsoft/UserSecrets" = "deny"
+"C:/Users/tokso/Documents" = "deny"
+"C:/Users/tokso/Desktop" = "deny"
+"C:/Users/tokso/Downloads" = "deny"
+"C:/Users/tokso/Pictures" = "deny"
+"C:/Users/tokso/Music" = "deny"
+"C:/Users/tokso/Videos" = "deny"
+"C:/Users/tokso/OneDrive" = "deny"
+
+# Registered source roots receive read denials, never workspace write grants.
+[permissions.factory-coordinator.filesystem."C:/Users/tokso/source/HabitAI/life_coach_ai"]
+"." = "read"
+".env" = "deny"
+"**/*.env" = "deny"
+"**/.env.*" = "deny"
+
+[permissions.factory-coordinator.filesystem."C:/Users/tokso/source/repos/HabitAI"]
+"." = "read"
+".env" = "deny"
+"**/*.env" = "deny"
+"**/.env.*" = "deny"
+
+[permissions.factory-coordinator.filesystem."C:/Users/tokso/source/repos/HabitAI-LandingPage"]
+"." = "read"
+".env" = "deny"
+"**/*.env" = "deny"
+"**/.env.*" = "deny"
+
+[permissions.factory-coordinator.filesystem."C:/Users/tokso/source/repos/WhisperRoom"]
+"." = "read"
+".env" = "deny"
+"**/*.env" = "deny"
+"**/.env.*" = "deny"
+
+[permissions.factory-coordinator.filesystem."C:/Users/tokso/source/repos/whisper_room"]
+"." = "read"
+".env" = "deny"
+"**/*.env" = "deny"
+"**/.env.*" = "deny"
 
 [permissions.factory-coordinator.filesystem.":workspace_roots"]
 "." = "read"
 "verification/runs" = "write"
+".env" = "deny"
 "**/*.env" = "deny"
 "**/.env.*" = "deny"
 "work/permission-fixture/secrets" = "deny"
@@ -57,20 +104,15 @@ extends = "factory-coordinator"
 
 [permissions.factory-worker-fixture]
 description = "Disposable fixture only, one approved application file."
-extends = ":workspace"
+extends = "factory-reviewer"
 
 [permissions.factory-worker-fixture.filesystem]
-":root" = "deny"
-":minimal" = "read"
 ":tmpdir" = "read"
 
 [permissions.factory-worker-fixture.filesystem.":workspace_roots"]
 "." = "read"
 "work/permission-fixture/app/allowed.txt" = "write"
 "verification/runs/native-controls" = "write"
-"work/permission-fixture/secrets" = "deny"
-"**/*.env" = "deny"
-"**/.env.*" = "deny"
 
 [permissions.factory-worker-fixture.network]
 enabled = false

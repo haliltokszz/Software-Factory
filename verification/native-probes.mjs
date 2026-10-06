@@ -26,10 +26,12 @@ function safeTarget(base,path) {
 }
 
 const protectedFiles=['app/blocked.txt','AGENTS.md','.codex/config.toml','.github/workflows/dummy.yml','CODEOWNERS','secrets/dummy.txt'];
+const environmentFiles=['.env','app/nested/factory.env','app/nested/.env.local'];
 const probes=[
   {id:'allowed-write',file:'app/allowed.txt',read:false,allow:true},
   ...protectedFiles.filter(p=>!p.startsWith('secrets')).map((file,i)=>({id:'protected-'+i,file,read:false,allow:false})),
   {id:'secret-read',file:'secrets/dummy.txt',read:true,allow:false},
+  ...environmentFiles.map((file,i)=>({id:'environment-read-'+i,file,read:true,allow:false})),
   {id:'case-alias',file:'agents.md',read:false,allow:false},
   {id:'dotdot-alias',file:'app/../AGENTS.md',read:false,allow:false},
   {id:'outside-scope',file:'../outside.txt',read:false,allow:false}
@@ -42,7 +44,7 @@ export async function runNativeProbes(input) {
   safeTarget(factory,outputDirectory);
   mkdirSync(outputDirectory,{recursive:true});
   const results={passed:[],failed:[],unsupported:[],records:[]};
-  const files=['app/allowed.txt',...protectedFiles];
+  const files=['app/allowed.txt',...protectedFiles,...environmentFiles];
   // Validate all existing ancestors before any fixture writes.
   for(const file of files) safeTarget(fixture,join(fixture,file));
   safeTarget(factory,join(fixture,'../outside.txt'));
@@ -53,6 +55,11 @@ export async function runNativeProbes(input) {
   }
   const outside=join(fixture,'../outside.txt');
   if(!existsSync(outside)) writeFileSync(outside,'factory dummy outside\n',{flag:'wx'});
+  // Native Windows launch does not resolve the RTK basename in this installation.
+  // Resolve the existing executable once; do not broaden filesystem permissions.
+  const lookup=process.platform==='win32'?spawnSync('rtk',['proxy','where.exe','rtk'],{cwd:factory,shell:false,encoding:'utf8',timeout:5000,windowsHide:true}):null;
+  const nativeRtk=lookup?.stdout?.trim().split(/\r?\n/).find(path=>isAbsolute(path)&&existsSync(path));
+  if(process.platform==='win32' && (lookup.status!==0 || !nativeRtk)) throw new Error('native RTK executable could not be resolved');
   for(const probe of probes) {
     if(probe.id==='case-alias' && process.platform!=='win32') {results.unsupported.push('case-alias: case-insensitive filesystem not observed');continue;}
     const target=join(fixture,probe.file);
@@ -60,7 +67,7 @@ export async function runNativeProbes(input) {
     const args=['proxy','codex','sandbox','-C',factory];
     if(input.configProfile) args.push('-p',input.configProfile);
     const payload='native probe '+randomUUID()+'\n';
-    args.push('-P',input.permissionProfile,'rtk','proxy','node','--preserve-symlinks-main',join(factory,'verification','native-probes.mjs'),'--probe',probe.id,'--factory',factory,'--fixture',fixture,'--payload',payload);
+    args.push('-P',input.permissionProfile,nativeRtk??'rtk','proxy','node','--preserve-symlinks-main',join(factory,'verification','native-probes.mjs'),'--probe',probe.id,'--factory',factory,'--fixture',fixture,'--payload',payload);
     const run=spawnSync('rtk',args,{cwd:factory,shell:false,encoding:'utf8',timeout:60000,windowsHide:true});
     const output=(run.stdout??'')+(run.stderr??'')+(run.error?'\n'+run.error.message:'');
     const path=join(outputDirectory,probe.id+'.json');

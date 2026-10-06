@@ -44,12 +44,14 @@
 
 **Interfaces:** `runNativeProbes({factoryRoot,fixtureRoot,permissionProfile})`; unchanged native result arrays with explicit unsupported tool/ownership/junction/remote checks.
 
-- [ ] Run actual unchanged trusted profile. Expected: mandatory root-read startup rejection. Record RED.
-- [ ] Add root-read baseline, explicit denials for `.codex`, `.ssh`, `.aws`, `.azure`, `.kube`, `.config/gcloud`, credential files, Microsoft UserSecrets and personal Documents/Desktop/Downloads/Pictures/Music/Videos/OneDrive. Do not deny all AppData or modify OS ACLs.
-- [ ] Add finite environment-file rules at Factory plus the five registered source roots, including `.env`, `*.env`, `.env.*`. Set `glob_scan_max_depth = 6`; fixture worker inherits reviewer so denials remain shared without broad evidence writes.
-- [ ] Create owned root/nested/suffix environment fixtures before sandbox startup and extend real native probes for their read denials. Expected: required reads denied with EPERM/EACCES; startup failures and ENOENT fail acceptance.
+- [x] Run actual unchanged trusted profile. Expected: mandatory root-read startup rejection. Record RED.
+- [x] Add root-read baseline, explicit denials for `.codex`, `.ssh`, `.aws`, `.azure`, `.kube`, `.config/gcloud`, credential files, Microsoft UserSecrets and personal Documents/Desktop/Downloads/Pictures/Music/Videos/OneDrive. Do not deny all AppData or modify OS ACLs.
+- [x] Add finite environment-file rules at Factory plus the five registered source roots, including `.env`, `*.env`, `.env.*`. Set `glob_scan_max_depth = 6`; fixture worker inherits reviewer so denials remain shared without broad evidence writes.
+- [x] Create owned root/nested/suffix environment fixtures before sandbox startup and extend real native probes for their read denials. Expected: required reads denied with EPERM/EACCES; startup failures and ENOENT fail acceptance.
 - [ ] Run actual fixture profile with persisted trust, then coordinator/reviewer positive reads, allowed coordinator evidence write, denied reviewer evidence/application write, denied worker broader evidence write, dummy personal read denial, dummy neutral outside read allow/write deny and network deny. Exact payload/unchanged bytes and actual process output required.
-- [ ] Run `rtk proxy node --test verification/contracts.test.mjs verification/record-check.test.mjs verification/native-probes.test.mjs`. Expected: all core tests pass; failure: any assertion, unexpected write, secret read or unavailable command. Commit: `fix: enforce approved Windows factory read and write boundaries`.
+- [x] Run `rtk proxy node --test verification/contracts.test.mjs verification/record-check.test.mjs verification/native-probes.test.mjs`. Expected: all core tests pass; failure: any assertion, unexpected write, secret read or unavailable command. Commit: `fix: enforce approved Windows factory read and write boundaries`.
+
+**Observed limit:** filesystem fixture13/13 and separate role filesystem24/24 pass; first-party full provisioning repairs external denial (3/3 EACCES). Loopback TCP denial fails (3/3 connect) even after provisioning. The preceding combined acceptance step remains unchecked; Task 2 is not fully accepted. A is applied; full network/tool/agent activation is closed. Native Windows RTK launch required resolving the installed executable path; this evidence-backed correction adds no permission grant.
 
 ### Task 3: Record acceptance and review
 
