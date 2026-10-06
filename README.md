@@ -2,7 +2,7 @@
 
 Yerel Codex/Plus üzerinde üç CTO kararıyla ürün geliştirme: yatırım, geliştirme kapsamı, yayın. GitHub Issues iş kaynağı; Projects görünüm. Aynı anda tek aktif geliştirme paketi. Son merge/yayın kullanıcıda.
 
-## Durum — 5 Ekim 2026
+## Durum — 6 Ekim 2026
 
 Çekirdek yerel olarak hazır: üç ürün/beş repo kaydı, onay ve kanıt doğrulayıcıları, gerçek RTK komut kaydı, üç rol, beş teslim şablonu, native izin probe aracı ve heartbeat metni. Bağımsız inceleme sonrası 21 çekirdek testi geçti. Disposable pilotta önce iki davranış testi kırıldı; düzeltmeden sonra üç test geçti.
 
@@ -39,4 +39,8 @@ Tek onaylı komutun gerçek kanıtı için `rtk proxy node verification/record-c
 
 5 Ekim 2026: Kullanıcının açık onayıyla Codex'in first-party `windowsSandbox/setupStart` çağrısı üzerinden `elevated` kurulum tamamlandı. Native bildirim `success: true`, hazırlık sorgusu `ready` döndürdü; Codex global Windows sandbox ayarı `elevated` olarak kaydedildi. Standart native workspace profiliyle ayrı disposable klasörde gerçek komut çalıştı, exit 0 döndürdü ve beklenen deneme dosyası oluştu; temel kurulum çalışma testi geçti.
 
-Gözetimsiz çalışma kapalı. Proje profili yükleme hatası sürüyor; doğrudan verilen dar profil `elevated Windows sandbox requires effective :root read access` nedeniyle reddediliyor. Ayrı, sabit dummy dosya komutlarıyla yapılan Windows uyumluluk denemesi de `CreateProcessWithLogonW failed: 267` ile komut başlamadan durdu. Bu denemenin genel okuma tabanı Factory profillerine uygulanmadı; hiçbir dosya koruma testi geçilmiş sayılmadı. Önce komut başlatma ve profil uyumluluğu çözülmeli, ardından GitHub integration erişimi, native rol/skill keşfi ve gerçek pilot/schedule kabulü tamamlanmalı. [Kabul kaydı](verification/acceptance.md) ayrıntıları tutar. [Heartbeat](automation/heartbeat.md) metni hazır; etkin otomasyon oluşturulmadı.
+Uyumluluk devamında Node'un dosya yolu çözümlemesi düzeltildi; çekirdek testler 21/21 ve gerçek native örnek dosya kontrolleri 10/10 geçti. İzin verilen dosya yazılabildi; korunan dosyalar, örnek sır okuma ve kapsam dışı yazma engellendi. Bu sonuçlar yalnızca sabit deneme komutları ve geçici Windows uyumlu okuma profili için geçerli. Önceki `CreateProcessWithLogonW failed: 267` aynı denemede artık tekrarlanmadı; nedeni kanıtlanmış sayılmıyor.
+
+Proje ayarlarının yüklenmeme nedeni bulundu: Codex trust kaydı ana Git checkout'una bağlı. Doğru kayıt yalnızca deneme oturumunda verilince üç izin profili yükleniyor. Kalıcı trust kaydı yazılmadı. Mevcut dar Factory profili, Windows'un `:root` okuma şartı nedeniyle hâlâ çalışmıyor; canlı dosya okuma kapsamı genişletilmedi. Native rol/skill sorgusu da devre dışı MCP girdisinin eksik transport tanımı nedeniyle başarısız. GitHub connector mevcut kurulum listesinde kayıt döndürmedi; Issue yazımındaki önceki 403 giderilmiş sayılmıyor.
+
+**Gözetimsiz çalışma kapalı.** Sonraki karar Windows'ta daha geniş okuma ve açık yasak yollar ile ilerlemek veya ayrı Linux/WSL çalışma ortamını tasarlamak. Bu, kurulum onayından farklı bir izin/ortam değişikliği; kullanıcı kararı gerekiyor. Ardından native rol/araç sınırları, GitHub ve gerçek pilot/schedule kabulü tamamlanmalı. [Kabul kaydı](verification/acceptance.md) kanıt ve açık sınırları tutar. [Heartbeat](automation/heartbeat.md) metni hazır; etkin otomasyon oluşturulmadı.

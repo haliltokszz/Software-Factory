@@ -4,7 +4,7 @@ import {join,resolve,dirname,relative,isAbsolute} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {randomUUID} from 'node:crypto';
 
-const canonical = value => {const path=realpathSync(value);return process.platform==='win32'?path.toLowerCase():path;};
+const canonical = value => {const path=realpathSync.native(value);return process.platform==='win32'?path.toLowerCase():path;};
 const within = (base,path) => {const rel=relative(base,path);return rel==='' || (!isAbsolute(rel) && rel!=='..' && !rel.startsWith('..'+(process.platform==='win32'?'\\':'/')));};
 
 function validateFixture(input) {
@@ -60,7 +60,7 @@ export async function runNativeProbes(input) {
     const args=['proxy','codex','sandbox','-C',factory];
     if(input.configProfile) args.push('-p',input.configProfile);
     const payload='native probe '+randomUUID()+'\n';
-    args.push('-P',input.permissionProfile,'rtk','proxy','node',join(factory,'verification','native-probes.mjs'),'--probe',probe.id,'--factory',factory,'--fixture',fixture,'--payload',payload);
+    args.push('-P',input.permissionProfile,'rtk','proxy','node','--preserve-symlinks-main',join(factory,'verification','native-probes.mjs'),'--probe',probe.id,'--factory',factory,'--fixture',fixture,'--payload',payload);
     const run=spawnSync('rtk',args,{cwd:factory,shell:false,encoding:'utf8',timeout:60000,windowsHide:true});
     const output=(run.stdout??'')+(run.stderr??'')+(run.error?'\n'+run.error.message:'');
     const path=join(outputDirectory,probe.id+'.json');
