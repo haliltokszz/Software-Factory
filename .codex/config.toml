@@ -18,9 +18,6 @@ default_app_access = "deny"
 [mcp_servers.node_repl]
 enabled = false
 
-[mcp_servers.cua_repl]
-enabled = false
-
 [mcp_servers.stitch]
 enabled = false
 
