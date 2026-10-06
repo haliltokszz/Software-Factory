@@ -57,7 +57,7 @@
 
 **Files:** Modify `README.md`, `verification/acceptance.md`; update this plan checkboxes and its ignored ledger.
 
-- [ ] Record current-version typed loading, persisted exact trust and per-profile behavioral results, distinguishing finite deny coverage from global root reads and all remaining activation prerequisites.
+- [x] Record current-version typed loading, persisted exact trust and per-profile behavioral results, distinguishing finite deny coverage from global root reads and all remaining activation prerequisites.
 - [ ] Run full core suite, `rtk proxy node verification/contracts.mjs --registry projects.json`, `rtk proxy git diff --check`, and verify clean primary checkout. Expected: passing tests, valid registry, no unrelated changes.
 - [ ] One fresh reviewer checks the addendum range against approved A, immutable design and Review Focus. Address Important/Critical findings in one verified fix pass; no remote publication.
 - [ ] Commit scoped docs/plan as `docs: record Windows A acceptance and remaining factory gates`. Acceptance: A results are concrete and reviewable; missing tool/ownership/remote/scheduler acceptance remains explicitly closed.
