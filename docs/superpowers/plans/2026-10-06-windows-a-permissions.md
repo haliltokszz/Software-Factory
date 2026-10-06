@@ -58,6 +58,8 @@
 **Files:** Modify `README.md`, `verification/acceptance.md`; update this plan checkboxes and its ignored ledger.
 
 - [x] Record current-version typed loading, persisted exact trust and per-profile behavioral results, distinguishing finite deny coverage from global root reads and all remaining activation prerequisites.
-- [ ] Run full core suite, `rtk proxy node verification/contracts.mjs --registry projects.json`, `rtk proxy git diff --check`, and verify clean primary checkout. Expected: passing tests, valid registry, no unrelated changes.
-- [ ] One fresh reviewer checks the addendum range against approved A, immutable design and Review Focus. Address Important/Critical findings in one verified fix pass; no remote publication.
-- [ ] Commit scoped docs/plan as `docs: record Windows A acceptance and remaining factory gates`. Acceptance: A results are concrete and reviewable; missing tool/ownership/remote/scheduler acceptance remains explicitly closed.
+- [x] Run full core suite, `rtk proxy node verification/contracts.mjs --registry projects.json`, `rtk proxy git diff --check`, and verify clean primary checkout. Expected: passing tests, valid registry, no unrelated changes.
+- [x] One fresh reviewer checks the addendum range against approved A, immutable design and Review Focus. Address Important/Critical findings in one verified fix pass; no remote publication.
+- [x] Commit scoped docs/plan as `docs: record Windows A acceptance and remaining factory gates`. Acceptance: A results are concrete and reviewable; missing tool/ownership/remote/scheduler acceptance remains explicitly closed.
+
+**Task 3 checkpoint:** commit `537508b` recorded the A results; the final documentation checkpoint adds completed post-provisioning filesystem evidence and the independent `40cb925..537508b` review. Core code is unchanged since the fresh 21/21 run. Registry and final diff checks pass; primary main remains clean. Task 2 network acceptance is still incomplete. Retain the ledger and bootstrap worktree for that required continuation; no merge/push or unattended activation.
