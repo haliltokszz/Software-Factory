@@ -1,4 +1,16 @@
-# Factory acceptance — status 2026-10-06
+# Factory acceptance — status 2026-10-11
+
+## Main-project installation — 2026-10-11
+
+The human explicitly requested installing the authored bundle in the saved main checkout, a Turkish README and a GitHub push. This supersedes the bootstrap-only publication restriction for this Factory installation; it does not approve product changes, worker activation or release. The operator entrypoint is `$factory durum` in a new chat on the saved Software Factory project. Read-only status and conversation-only intake do not require an Issue; managed execution still requires the full Issue/version/scope, real approval provenance and all native/remote gates. FACTORY_ROOT resolves from the skill's repository and is explicit in product-role handoffs. The three agent definitions keep their existing read-only defaults; no permission grant, global config or dependency changes are part of this installation.
+
+Fresh bootstrap checks on October 11: **core suite 21/21 PASS**, registry valid and diff whitespace check passed. Installed CLI reports `0.162.0-alpha.17.2`. An independent first-party app-server process without invocation overrides returned the active project config, `factory-coordinator` default, `never` policy, all three permission profiles, elevated Windows mode and the enabled repo-scoped `factory` skill with no workspace errors. Selected evidence is ignored in `verification/runs/main-installation-2026-10-11/bootstrap-entrypoint.json`. This proves typed config and skill discovery in that checkout, not model behavior, actual role selection or renewed sandbox enforcement.
+
+The sections below record dated evidence. Their references to an empty primary checkout or no main push describe the October 5–6 state; they do not override the human's October 11 installation request. Current main-checkout verification is recorded separately after transfer. Authored role files and raw config `agent_names=[]` do not prove actual custom-agent invocation.
+
+**Independent installation review:** fresh reviewer `/root/main_install_review` (gpt-6-astra) inspected the full original-main installation range plus the current operator-entry diff, plan, design/policy, sources and sanitized bootstrap discovery evidence. No Critical or Important finding; one Minor EOF-whitespace finding in three files was corrected in one pass. The reviewer independently ran the 12 contract tests and registry validation successfully. Main transfer/push and actual role/native/unattended acceptance were explicitly outside the review verdict and remain subject to their separate evidence.
+
+## Bootstrap evidence — 2026-10-05/06
 
 Continuation on 2026-10-05: full core suite 19/19 PASS; local disposable pilot behavior RED (2 failures) → GREEN (3/3 PASS), commit 0d4e54a based on bootstrap 679ef79. Exact diff: verification/pilot/product.mjs and product.test.mjs only. This is manual local test evidence; no native worker, real Issue-bound approval or live pilot PR.
 

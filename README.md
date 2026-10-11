@@ -1,31 +1,83 @@
-# Software Factory
+# AI Software Factory
 
-Yerel Codex/Plus üzerinde üç CTO kararıyla ürün geliştirme: yatırım, geliştirme kapsamı, yayın. GitHub Issues iş kaynağı; Projects görünüm. Aynı anda tek aktif geliştirme paketi. Son merge/yayın kullanıcıda.
+ChronoPlan ve WhisperRoom gibi mevcut ürünleri, Eventory gibi yeni fikirleri tek çalışma düzeninde yöneten yerel Codex projesi. Amaç geliştirme yükünü ve projeler arasındaki bağlam değişimini azaltmak. Araştırma, planlama, uygulama ve inceleme rollerini Codex yürütür; yatırım, geliştirme kapsamı ve yayın kararları CTO olarak kullanıcıda kalır.
 
-## Durum — 6 Ekim 2026
+Bu repo mevcut Codex/Plus kullanımına göre hazırlanmıştır. Ayrı bir ücretli API servisi veya sürekli çalışan sunucu kurulumu içermez.
 
-Çekirdek yerel olarak hazır: üç ürün/beş repo kaydı, onay ve kanıt doğrulayıcıları, gerçek RTK komut kaydı, üç rol, beş teslim şablonu, native izin probe aracı ve heartbeat metni. Bağımsız inceleme sonrası 21 çekirdek testi geçti. Disposable pilotta önce iki davranış testi kırıldı; düzeltmeden sonra üç test geçti.
+## Codex'te nasıl başlatılır?
 
-**Gözetimsiz geliştirme kapalı.** Native izin/sahiplik/araç sınırları, gerçek GitHub Issue/PR yazımı, pano ve zamanlanmış devam kabulü tamamlanmadı. Dosyaların bulunması bunların çalıştığı anlamına gelmez. Ayrıntılı [kabul kaydı](verification/acceptance.md).
+1. Codex'te `C:/Users/tokso/source/repos/AI-Software-Factory` klasörüne bağlı Software Factory projesini aç.
+2. Projede **yeni bir sohbet** başlat. Mevcut sohbetlerin skill listesi kurulum öncesinden kalabilir.
+3. İlk mesajı gönder:
 
-## Klasörler ve dal
+```text
+$factory durum
+```
 
-Codex'e eklenen ana proje: `C:/Users/tokso/source/repos/AI-Software-Factory`.
-Kurulum çalışma kopyası: `C:/Users/tokso/source/repos/AI-Software-Factory-bootstrap`, dal `factory/bootstrap-a-plus`.
+Codex, [Factory skill](.agents/skills/factory/SKILL.md), [işletim kuralları](factory-policy.md), [proje kayıtları](projects.json) ve [kabul kaydını](verification/acceptance.md) okuyarak mevcut durumu, eksik yetenekleri ve sonraki insan kararını raporlar. Bu çağrı ürün kodunu değiştirmez veya worker başlatmaz. İlk durum raporu için GitHub Issue gerekmez.
 
-Bootstrap klasörü aynı Git reposunun ayrı worktree'sidir; kurulum değişiklikleri burada incelenir. İkinci uygulama veya çalışma servisi değildir. Ana checkout başlangıç `main` commit'inde kalır. Remote sınırlar doğrulanmadan push/PR ve kullanıcı yayın kararı olmadan merge yapılmaz.
+Skill seçicide `factory` görünmüyorsa projeyi yeniden aç veya Codex'i yeniden başlat. Klasörün `.agents/skills/factory/SKILL.md` dosyasını içerdiğini kontrol et. İlk tanılama için şu açık dosya talimatı da kullanılabilir:
 
-Yerel pilot: `work/acceptance-product`, `factory/pilot-acceptance` dalı. Yalnızca iki pilot dosyası değişti; native worker veya canlı pilot PR olarak sunulmaz. `work/` ve `verification/runs/` Git'e eklenmez.
+```text
+.agents/skills/factory/SKILL.md dosyasını oku ve yalnızca Factory durumunu raporla.
+```
 
-## Kullanım sözleşmesi
+### Yeni fikir
 
-Yeni fikir [intake](templates/intake.md) → [araştırma/CTO 1](templates/research.md). Masa başı araştırma kullanım/ödeme isteğini doğrulamaz; gözlenmediyse UNKNOWN.
+```text
+$factory Eventory fikrini araştırma aşamasına al. Önce ihtiyacı,
+hedef kullanıcıyı ve kanıt eksiklerini belirleyelim.
+```
 
-Mevcut iş: gerçek repo incelemesi → [tasarım/CTO 2](templates/work-package.md) → onaylı kapsamda plan/kod/test → bağımsız inceleme → [yayın/CTO 3](templates/release.md). Gate 2 sonrasında rutin plan onayı açılmaz; kapsam değişirse insan kararı gerekir. [Checkpoint](templates/checkpoint.md) aynı Issue'da sayaç/branch/SHA/PR/nextStep taşır.
+İlk çıktı sohbet içinde bir [intake taslağı](templates/intake.md) olur; eksik niyet için tek soru sorulur. Kaydedilmiş iş ve geliştirme yetkisi oluşturulmaz. Araştırma `FACT`, `INFERENCE`, `ASSUMPTION`, `UNKNOWN` ayrımını korur. Masa başı araştırma gerçek kullanım veya ödeme isteğini kanıtlamaz. Kanıtlanmayan talep `UNKNOWN` kalır; yatırım kararı kullanıcıya gelir.
 
-[Policy](factory-policy.md), [skill](.agents/skills/factory/SKILL.md) ve [registry](projects.json) tek işletim sözleşmesidir. Product code/CI değişikliği bu kurulumda yok. Registry'deki unverified/null/boş kontroller onboarding bekler; Ready sayılmaz. Eventory gerçek brief'i henüz kayıtlı değil.
+### Mevcut ürün
+
+```text
+$factory ChronoPlan'daki yeni iş talebimi değerlendir.
+Önce ilgili repo ve mevcut davranışı incele, geliştirme kapsamını hazırla.
+```
+
+İlk değerlendirme ve kapsam taslağı sohbet içinde hazırlanabilir. Yönetilen uygulama için GitHub Issue, sürümlü iş paketi, kapsam özeti, gerçek insan onayı ve ilgili kabul kontrolleri gerekir. Kayıtlı repoların bulunması onların geliştirmeye hazır olduğu anlamına gelmez.
+
+## Kurulan skill ve roller
+
+| Dosya | Görev |
+|---|---|
+| [AGENTS.md](AGENTS.md) | Repo içindeki ortak çalışma talimatları ve giriş yolu |
+| [.agents/skills/factory/SKILL.md](.agents/skills/factory/SKILL.md) | `$factory` çağrısı, durum/intake ve yönetilen iş akışı |
+| [.codex/agents/factory-planner.toml](.codex/agents/factory-planner.toml) | Araştırma, tasarım ve CTO karar paketi |
+| [.codex/agents/factory-implementer.toml](.codex/agents/factory-implementer.toml) | Onaylı, bağlı iş paketinin uygulama rolü; başlangıç izni salt okunur |
+| [.codex/agents/factory-reviewer.toml](.codex/agents/factory-reviewer.toml) | Bağımsız inceleme ve kanıt denetimi |
+| [.codex/config.toml](.codex/config.toml) | Projeye özel izin profilleri ve araç kısıtları |
+
+Roller ayrı sohbetlerde elle çalıştırılacak servisler değildir. Koordinatör, uygun iş paketinde rol devri yapar. Dosya tanımlarının kurulması gerçek agent çağrısı, iş sahipliği ve güvenlik kabulünü tek başına kanıtlamaz; bu kontroller [kabul kaydında](verification/acceptance.md) ayrı tutulur.
+
+Skill kendi dosyasının bulunduğu repoyu `FACTORY_ROOT` olarak çözümler. Ürün checkout'unda çalışan role bu kök açıkça aktarılır. Ürün kökü veya bootstrap klasörü otomatik varsayılmaz. Kurulum repo kapsamındadır; bütün Codex projelerine global skill eklemez.
+
+## Üç CTO kararı
+
+| Karar | Kullanıcının onayladığı sonuç |
+|---|---|
+| CTO 1 — Yatırım | Araştırma, kanıt eksikleri ve doğrulama yaklaşımı |
+| CTO 2 — Geliştirme | Tasarım, kapsam, kabul ölçütleri ve izin verilen değişiklikler |
+| CTO 3 — Yayın | Doğrulanmış aday, kalan riskler ve merge/yayın kararı |
+
+Akış: **Evidence → Decision → Execution → Measurement**. Aynı anda portföy genelinde tek aktif geliştirme paketi. Onaylı kapsam içindeki rutin işler tekrar plan onayı gerektirmez; kapsam veya önemli sınır değişirse insan kararı gerekir. Son merge ve yayın kullanıcıdadır.
+
+GitHub Issues yönetilen iş kaynağıdır; Projects görünüm katmanıdır. [Checkpoint](templates/checkpoint.md), aynı Issue'da sürüm, kapsam, sayaç, branch, SHA, PR ve `nextStep` bilgisini taşır. [Araştırma](templates/research.md), [iş paketi](templates/work-package.md) ve [yayın](templates/release.md) şablonları kararları kısa ve incelenebilir tutar.
+
+## Çalışan kısım ve açık sınırlar
+
+Yerel çekirdek; proje kayıtlarını, onay ve kanıt sözleşmelerini, gerçek komut kayıtlarını ve izin probe akışını içerir. Durum/intake girişi kurulumun manuel başlangıcıdır.
+
+**Gözetimsiz geliştirme henüz kabul edilmedi.** Yerel TCP/servis erişimi, gerçek agent rol seçimi, araç yüzeyi, iş sahipliği, native junction ve GitHub sınırları açık. Önceki GitHub Issue yazımı `403 — Resource not accessible by integration` döndürdü; Git push erişimi ayrı bir kanaldır. Gerçek pilot/PR, pano ve zamanlanmış devam kabulü tamamlanmadı. [Heartbeat](automation/heartbeat.md) talimatı hazır; bu dosya etkin otomasyon oluşturmaz.
+
+Onaylı Windows A politikası genel okumayı kullanır; seçilen kimlik bilgisi ve kişisel klasörler açıkça yasaktır. Diğer yerel dosyalar okunabilir. `.env` yasakları başlangıçta altı dizin seviyesiyle taranır; daha derin veya sonradan oluşan dosyalar ayrıca değerlendirilir. Yerel yollar ve izin profilleri bu Windows makinesine göre hazırlanmıştır; başka makinede yeniden onboarding gerekir. Tarihli sonuçlar ve kalan kontroller [kabul kaydında](verification/acceptance.md) bulunur.
 
 ## Yerel doğrulama
+
+Mevcut Node.js ve RTK kurulumu ile repo kökünde:
 
 ```powershell
 rtk proxy node --test verification/contracts.test.mjs verification/record-check.test.mjs verification/native-probes.test.mjs
@@ -33,16 +85,12 @@ rtk proxy node verification/contracts.mjs --registry projects.json
 rtk proxy git diff --check
 ```
 
-Tek onaylı komutun gerçek kanıtı için `rtk proxy node verification/record-check.mjs --input work/check-input.json`; girdi checkId, issue, packageVersion, repository, cwd, args, outputDirectory, timeoutMs taşır. args executable rtk'nin argümanlarıdır, örneğin `["proxy","node","--test"]`. Kayıt yetki vermez; dirty checkout/SHA değişikliği başarısız kanıttır. Native profil ve gerçek insan provenance'ı ayrıca gerekir.
+Tek onaylı komutun gerçek kanıtı için `rtk proxy node verification/record-check.mjs --input work/check-input.json` kullanılır. Girdi `checkId`, `issue`, `packageVersion`, `repository`, `cwd`, `args`, `outputDirectory`, `timeoutMs` taşır. `args`, RTK argümanlarıdır; örneğin `["proxy","node","--test"]`. Kayıt tek başına yetki vermez. Dirty checkout veya SHA değişikliği başarısız kanıttır.
 
-## Sonraki işletim adımı
+## Klasör düzeni
 
-5 Ekim 2026: Kullanıcının açık onayıyla Codex'in first-party `windowsSandbox/setupStart` çağrısı üzerinden `elevated` kurulum tamamlandı. Native bildirim `success: true`, hazırlık sorgusu `ready` döndürdü; Codex global Windows sandbox ayarı `elevated` olarak kaydedildi. Standart native workspace profiliyle ayrı disposable klasörde gerçek komut çalıştı, exit 0 döndürdü ve beklenen deneme dosyası oluştu; temel kurulum çalışma testi geçti.
+Ana kullanım klasörü `C:/Users/tokso/source/repos/AI-Software-Factory`, GitHub reposu [haliltokszz/Software-Factory](https://github.com/haliltokszz/Software-Factory).
 
-Uyumluluk devamında Node'un dosya yolu çözümlemesi düzeltildi; çekirdek testler 21/21 ve gerçek native örnek dosya kontrolleri 10/10 geçti. İzin verilen dosya yazılabildi; korunan dosyalar, örnek sır okuma ve kapsam dışı yazma engellendi. Bu sonuçlar yalnızca sabit deneme komutları ve geçici Windows uyumlu okuma profili için geçerli. Önceki `CreateProcessWithLogonW failed: 267` aynı denemede artık tekrarlanmadı; nedeni kanıtlanmış sayılmıyor.
+`AI-Software-Factory-bootstrap`, aynı Git reposunun kurulum için kullanılmış ayrı worktree'sidir. İkinci uygulama veya çalışan servis değildir; günlük kullanım için ana proje yeterlidir. Kurulumun ana repo/main üzerine alınması ve GitHub'a gönderilmesi kullanıcı tarafından açıkça onaylanmıştır. Bu onay ürün yayın yetkisi oluşturmaz.
 
-6 Ekim 2026: Kullanıcı A seçeneğini onayladı. Ana repo için kalıcı trust kaydı native API üzerinden yazıldı; diğer kullanıcı ayarlarının korunduğu doğrulandı. Üç profil Windows'un gerekli genel okuma tabanını kullanıyor; `.codex`, SSH/cloud kimlik bilgisi klasörleri ve seçilen kişisel klasörler açıkça yasak. Diğer yerel dosyalar okunabilir. Yazma kapsamları genişletilmedi. `.env` yasakları Factory ve kayıtlı beş source root'unda başlangıçta altı dizin seviyesiyle taranır; daha derin/sonradan oluşan sırlar ve başka sır konumları ayrıca onboarding gerektirir.
-
-Codex CLI 0.160.1'de eksik `cua_repl` transport kaydı kaldırıldı; yerel Factory skill keşfi geçti. Kalıcı ayarla gerçek worker dosya kontrolleri 13/13, ayrı coordinator/reviewer/worker dosya kontrolleri 24/24 geçti. Bunlar komut sandbox'ı testleridir; native agent rol seçimi/sahipliği ve MCP/browser araçları için kabul değildir. Onaylı resmî yönetici provisioning adımı eksik dış ağ kurallarını oluşturdu; üç profilde internet bağlantısı artık `EACCES` ile engelleniyor. **Yerel TCP erişimi üç profilde de açık kaldı; tam ağ sınırı kabul edilmedi.** Ana checkout başlangıç `main` commit'inde olduğundan Factory dosyaları hâlâ bootstrap worktree'sindedir.
-
-**Gözetimsiz çalışma kapalı.** Sonraki teknik adım yerel servis erişimi ve native rol/araç/sahiplik sınırları. GitHub kurulum listesi hâlâ boş; önceki Issue403 giderilmiş sayılmıyor. Ardından gerçek pilot/PR ve zamanlanmış devam kabulü gerekli. A kararı yeniden beklenmiyor. [Kabul kaydı](verification/acceptance.md) kanıt ve açık sınırları tutar. [Heartbeat](automation/heartbeat.md) metni hazır; etkin otomasyon oluşturulmadı.
+`.agent/` ve `.superpowers/` yerel çalışma bağlamını, `work/` deneme/iş dosyalarını, `verification/runs/` ham doğrulama kanıtlarını tutar. Bu klasörler Git'e eklenmez. Kalıcı işletim kuralları, şablonlar ve doğrulama kaynakları Git'te tutulur.
